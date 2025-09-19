@@ -2,9 +2,13 @@ import json
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 app = FastAPI()
-AGENT_KEY = "challenge-token-123"
+load_dotenv()  
+AGENT_KEY = os.getenv("AGENT_KEY")
+
 
 # Cargar datos de seed.json al iniciar la app
 DATA_FILE = Path(__file__).parent / "seed.json"
