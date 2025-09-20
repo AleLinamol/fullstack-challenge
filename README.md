@@ -50,16 +50,21 @@ AGENT_KEY=challenge-token-123
 
 ```
 agent/
- ├── app/
- │    ├── main.py           # Servidor FastAPI y endpoint /rpc
- │    ├── config.py         # Configuración y variables de entorno
- │    ├── data_loader.py    # Carga y consulta de datos de usuarios
- │    ├── errors.py         # Manejo de errores JSON-RPC
- │    ├── rpc_handlers.py   # Implementación de métodos JSON-RPC
- │    ├── seed.json         # Datos estáticos de usuarios
- │    └── __init__.py       # Paquete Python vacío
- ├── requirements.txt       # Dependencias del proyecto
- └── README.md              # Este archivo
+├── app/
+│   ├── __init__.py
+│   ├── main.py              # Servidor FastAPI y endpoint /rpc
+│   ├── config.py            # Configuración y variables de entorno
+│   ├── data_loader.py       # Carga y consulta de datos de usuarios
+│   ├── errors.py            # Manejo de errores JSON-RPC
+│   ├── rpc_handlers.py      # Implementación de métodos JSON-RPC
+│   └── seed.json            # Datos estáticos de usuarios actualizados
+├── tests/
+│   ├── __init__.py          # (opcional) para tratar tests como paquete
+│   ├── test_rpc_handlers.py # Tests unitarios para rpc_handlers.py
+│   └── test_errors.py       # Tests unitarios para errors.py
+├── .env                    # Variables de entorno (no subir a repositorio si contiene datos sensibles)
+├── requirements.txt        # Dependencias del proyecto
+└── README.md               # Documentación del proyecto
 ```
 
 ---
