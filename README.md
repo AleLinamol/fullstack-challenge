@@ -1,4 +1,4 @@
-# Fullstack-challenge
+# _Fullstack Challenge_
 
 # Agent - Backend JSON-RPC Service
 
@@ -143,6 +143,63 @@ El servicio responde con errores JSON-RPC estándar, por ejemplo:
 - **Código -32700**: Error de parseo JSON.
 
 ---
+
+## Tests Unitarios
+
+El proyecto incluye tests unitarios para los módulos principales `rpc_handlers.py` y `errors.py` ubicados en la carpeta `tests/`.
+
+---
+
+### Estructura de tests
+
+```
+tests/
+ ├── test_rpc_handlers.py   # Tests para los métodos JSON-RPC
+ └── test_errors.py         # Tests para manejo de errores JSON-RPC
+```
+
+---
+
+### Requisitos para ejecutar tests
+
+- Tener instalado `pytest` (puedes instalarlo con `pip install pytest`).
+- Asegurarte de estar en la raíz del proyecto (`agent/`).
+- Los directorios `app/` y `tests/` deben contener un archivo `__init__.py` (puede estar vacío) para que Python los reconozca como paquetes.
+
+---
+
+### Cómo ejecutar los tests
+
+1. Desde la raíz del proyecto, abre una terminal y ejecuta:
+
+```bash
+pytest tests/
+```
+
+2. Si tienes problemas con la importación de módulos (`ModuleNotFoundError`), prueba a ejecutar con la variable de entorno `PYTHONPATH` configurada:
+
+- **En Windows PowerShell**:
+
+```powershell
+$env:PYTHONPATH = "."
+pytest tests/
+```
+
+- **En Windows CMD**:
+
+```cmd
+set PYTHONPATH=.
+pytest tests/
+```
+
+---
+
+### Qué verifican los tests
+
+- **test_rpc_handlers.py**: Validación de los métodos JSON-RPC (`get_user`, `search_users`, `list_users`) con diferentes casos, incluyendo validación de campos adicionales (`email`, `role`, `createdAt`).  
+
+- **test_errors.py**: Verificación de los códigos y formatos de errores JSON-RPC.
+
 
 ## Notas adicionales
 
