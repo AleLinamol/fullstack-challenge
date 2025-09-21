@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from app.intent_parser import parse_intent
+from app.jsonrpc_client import call_agent, JSONRPCError
 
 app = FastAPI()
 
@@ -19,8 +20,10 @@ async def chat_endpoint(req: ChatRequest):
                 "lista 3"
             ]
         }
-    # Simula respuesta exitosa con la intención detectada
-    return {
-        "intent": intent,
-        "message": f"Intención detectada: {intent['kind']}"
-    }
+    try:
+        result = await call_agent(intent)
+        return {"result": result}
+    except JSONRPCError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
