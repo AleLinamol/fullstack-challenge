@@ -1,32 +1,36 @@
-/* ChatUI.css */
-
 /* Centrar el chat vertical y horizontalmente en toda la pantalla */
-html, body {
-  height: 100%;
-  margin: 0;
+body {
   display: flex;
-  justify-content: center; /* Centrado horizontal */
-  align-items: center;     /* Centrado vertical */
-  background-color: #242424;
+  justify-content: center; 
+  align-items: center;     
+  background-image: url('/bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  margin: 0;
 }
 
 .chat-container {
-  max-width: 80vw;
-  height: 80vw; /* altura igual al ancho en viewport units */
-  max-height: 600px;
-  max-width: 600px;
+  width: 600px;
+  height: 600px;
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background-color: rgba(17, 25, 40, 0.75);
+  backdrop-filter: blur(19px) saturate(180%);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
   display: flex;
   flex-direction: column;
-  /* margin eliminado para evitar conflicto con flex centering */
+
+  min-width: 600px;
+  min-height: 600px;
+  max-width: 600px;
+  max-height: 600px;
 }
 
 .chat-container h2 {
-  color: #000000;
+  color: #fcfcfc; /* color claro acorde con fondo oscuro */
   text-align: center;
   margin-bottom: 20px;
 }
@@ -34,14 +38,15 @@ html, body {
 .messages-container {
   flex-grow: 1;
   min-height: 300px;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 15px;
   overflow-y: auto;
-  /* background-color: #ffffff;  <-- eliminado para fondo transparente */
   border-radius: 6px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.1); /* fondo sutil translucido */
+  color: #cbd5e1; /* texto claro */
 }
 
 .message-bubble {
@@ -51,63 +56,73 @@ html, body {
   border-radius: 12px;
   white-space: pre-wrap;
   word-break: break-word;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  font-size: 14px;
 }
 
 .message-bubble.user {
   align-self: flex-end;
-  background-color: #d0e7ff;
-  color: #003366;
+  background-color: rgba(68, 173, 233, 0.757);  /* azul cornflower semi transparente */
+  color: #f0f8ff;  /* texto muy claro */
+  font-weight: 600;
 }
 
 .message-bubble.system {
   align-self: flex-start;
-  background-color: #e8e8e8;
-  color: #333333;
+  background-color: rgba(71, 67, 188, 0.175);
+  color: #d1d5db;
+  font-weight: 500;
 }
 
 .message-bubble.error {
   align-self: flex-start;
-  background-color: #ffe6e6;
-  color: #cc0000;
+  background-color: #f06f6fbd; /* rojo intenso */
+  color: #fff0f0;
+  font-weight: 700;
 }
 
 .message-error-examples {
   margin-top: 6px;
   font-style: italic;
   font-size: 12px;
-  color: #666666;
+  color: #94a3b8; /* gris claro */
 }
 
 .message-input-container {
   display: flex;
   margin-top: 10px;
-  
 }
 
 .message-input {
   flex-grow: 1;
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   font-size: 16px;
-  outline-color: #3399ff;
-  background-color: rgb(255, 255, 255);
-  color: black; /* Este es el cambio para hacer el texto negro */
+  outline-color: #7f9cf5; /* azul pastel */
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #f0f4f8; /* texto claro */
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
+.message-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
 
+.message-input:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: #a3bffa;
+}
 
 .message-input:disabled {
-  background-color: #f0f0f0;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #777;
 }
-
-
 
 .send-button {
   margin-left: 8px;
   padding: 10px 16px;
-  background-color: #3399ff;
+  background-color: #2a68cbde; /* azul vivo */
   color: white;
   border: none;
   border-radius: 6px;
@@ -118,11 +133,11 @@ html, body {
 }
 
 .send-button:disabled {
-  background-color: #a0c4ff;
+  background-color: #93c5fd; /* azul más pálido */
   cursor: not-allowed;
+  color: #e0e7ff;
 }
 
 .send-button:not(:disabled):hover {
-  background-color: #267acc;
+  background-color: #2563eb; /* azul intenso */
 }
-
