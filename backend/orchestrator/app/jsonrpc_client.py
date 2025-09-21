@@ -1,21 +1,19 @@
 import httpx
 import uuid
-from dotenv import load_dotenv
-import os
-
-
-load_dotenv() 
-
-AGENT_KEY = os.getenv("AGENT_KEY")
-AGENT_URL = os.getenv("AGENT_URL")
+from app.config import AGENT_URL, AGENT_KEY
+from app.errors import JSONRPCError
 
 class JSONRPCError(Exception):
     def __init__(self, code, message):
         super().__init__(f"JSON-RPC Error {code}: {message}")
         self.code = code
         self.message = message
+    
 
 async def call_agent(intent: dict) -> dict:
+    if not AGENT_KEY or AGENT_KEY.strip() == "":
+        raise JSONRPCError(-32000, "Missing or invalid X-Agent-Key")
+    
     method = intent["kind"]
     params = {}
 
@@ -52,5 +50,7 @@ async def call_agent(intent: dict) -> dict:
 
     if "result" not in data:
         raise JSONRPCError(-32603, "Invalid response: missing result")
+    
+
 
     return data["result"]
