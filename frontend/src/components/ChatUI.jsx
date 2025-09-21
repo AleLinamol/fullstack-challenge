@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { mockSendMessage } from '../../mocks/chatMock';
 import './ChatUI.css';
 
@@ -85,8 +85,18 @@ function MessageInput({ onSend, disabled }) {
 
 
 export default function ChatUI() {
-    const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const sendMessage = async (text) => {
     setMessages(prev => [...prev, { from: 'user', text }]);
     setLoading(true);
@@ -103,14 +113,16 @@ export default function ChatUI() {
       setLoading(false);
     }
   };
+
   return (
     <div className="chat-container">
       <h2>Chat de Usuarios (Mock)</h2>
-      <div className="messages-container">
+      <div className="messages-container" style={{ maxHeight: '400px', overflowY: 'auto' }}>
         {messages.map((msg, idx) => (
           <MessageBubble key={idx} message={msg} />
         ))}
         {loading && <div>Cargando...</div>}
+        <div ref={messagesEndRef} />
       </div>
       <MessageInput onSend={sendMessage} disabled={loading} />
     </div>

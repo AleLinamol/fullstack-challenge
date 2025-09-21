@@ -1,4 +1,5 @@
-/* Centrar el chat vertical y horizontalmente en toda la pantalla */
+/* ChatUI.css */
+
 body {
   display: flex;
   justify-content: center; 
@@ -12,8 +13,13 @@ body {
 }
 
 .chat-container {
-  width: 600px;
-  height: 600px;
+  width: 90vw;               /* ancho relativo */
+  height: 80vh;              /* alto relativo */
+  max-width: 500px;          /* límite en pantallas grandes */
+  max-height: 600px;         /* límite */
+  min-width: 280px;          /* que no sea demasiado chico */
+  min-height: 350px;
+
   padding: 20px;
   font-family: Arial, sans-serif;
   background-color: rgba(17, 25, 40, 0.75);
@@ -23,52 +29,56 @@ body {
   display: flex;
   flex-direction: column;
 
-  min-width: 600px;
-  min-height: 600px;
-  max-width: 600px;
-  max-height: 600px;
+  align-items: center;
+  text-align: center;
 }
 
 .chat-container h2 {
-  color: #fcfcfc; /* color claro acorde con fondo oscuro */
-  text-align: center;
+  color: #fcfcfc;
   margin-bottom: 20px;
 }
 
+/* Contenedor de mensajes */
 .messages-container {
   flex-grow: 1;
-  min-height: 300px;
+  width: 100%;
+  min-height: 200px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 15px;
+  padding: 10px;
   overflow-y: auto;
-  border-radius: 6px;
+  border-radius: 5px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
-  background-color: rgba(255, 255, 255, 0.1); /* fondo sutil translucido */
-  color: #cbd5e1; /* texto claro */
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  align-items: center;
 }
 
+/* Burbujas */
 .message-bubble {
-  max-width: 80%;
+  max-width: 85%;      
   margin-bottom: 10px;
-  padding: 12px;
+  padding: 10px;
   border-radius: 12px;
   white-space: pre-wrap;
   word-break: break-word;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   font-size: 14px;
+  text-align: left;
 }
 
 .message-bubble.user {
   align-self: flex-end;
-  background-color: rgba(68, 173, 233, 0.757);  /* azul cornflower semi transparente */
-  color: #f0f8ff;  /* texto muy claro */
+  background-color: rgba(68, 173, 233, 0.757);  
+  color: #f0f8ff; 
   font-weight: 600;
 }
 
 .message-bubble.system {
   align-self: flex-start;
+  max-width: 65%;
+  width: max-content;
   background-color: rgba(71, 67, 188, 0.175);
   color: #d1d5db;
   font-weight: 500;
@@ -76,32 +86,27 @@ body {
 
 .message-bubble.error {
   align-self: flex-start;
-  background-color: #f06f6fbd; /* rojo intenso */
+  background-color: #f06f6fbd; 
   color: #fff0f0;
   font-weight: 700;
 }
 
-.message-error-examples {
-  margin-top: 6px;
-  font-style: italic;
-  font-size: 12px;
-  color: #94a3b8; /* gris claro */
-}
-
+/* Input y botón */
 .message-input-container {
   display: flex;
   margin-top: 10px;
+  width: 100%;
 }
 
 .message-input {
   flex-grow: 1;
-  padding: 10px;
+  padding: 8px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  font-size: 16px;
-  outline-color: #7f9cf5; /* azul pastel */
+  font-size: 14px;
+  outline-color: #7f9cf5; 
   background-color: rgba(255, 255, 255, 0.15);
-  color: #f0f4f8; /* texto claro */
+  color: #f0f4f8; 
   transition: background-color 0.3s, border-color 0.3s;
 }
 
@@ -109,35 +114,44 @@ body {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.message-input:focus {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-color: #a3bffa;
-}
-
-.message-input:disabled {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #777;
-}
-
 .send-button {
   margin-left: 8px;
-  padding: 10px 16px;
-  background-color: #2a68cbde; /* azul vivo */
+  padding: 8px 14px;
+  background-color: #2a68cbde; 
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   transition: background-color 0.3s;
 }
 
-.send-button:disabled {
-  background-color: #93c5fd; /* azul más pálido */
-  cursor: not-allowed;
-  color: #e0e7ff;
+/* --- MEDIA QUERIES --- */
+
+/* Pantallas pequeñas (móviles) */
+@media (max-width: 480px) {
+  .chat-container {
+    width: 95vw;
+    height: 85vh;
+    padding: 12px;
+  }
+
+  .message-bubble {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .send-button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
 }
 
-.send-button:not(:disabled):hover {
-  background-color: #2563eb; /* azul intenso */
+/* Pantallas medianas (tablets) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .chat-container {
+    width: 90vw;
+    height: 80vh;
+  }
 }
