@@ -1,0 +1,128 @@
+/* ChatUI.css */
+
+/* Centrar el chat vertical y horizontalmente en toda la pantalla */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+  align-items: center;     /* Centrado vertical */
+  background-color: #242424;
+}
+
+.chat-container {
+  max-width: 80vw;
+  height: 80vw; /* altura igual al ancho en viewport units */
+  max-height: 600px;
+  max-width: 600px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  /* margin eliminado para evitar conflicto con flex centering */
+}
+
+.chat-container h2 {
+  color: #000000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.messages-container {
+  flex-grow: 1;
+  min-height: 300px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  overflow-y: auto;
+  /* background-color: #ffffff;  <-- eliminado para fondo transparente */
+  border-radius: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-bubble {
+  max-width: 80%;
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.message-bubble.user {
+  align-self: flex-end;
+  background-color: #d0e7ff;
+  color: #003366;
+}
+
+.message-bubble.system {
+  align-self: flex-start;
+  background-color: #e8e8e8;
+  color: #333333;
+}
+
+.message-bubble.error {
+  align-self: flex-start;
+  background-color: #ffe6e6;
+  color: #cc0000;
+}
+
+.message-error-examples {
+  margin-top: 6px;
+  font-style: italic;
+  font-size: 12px;
+  color: #666666;
+}
+
+.message-input-container {
+  display: flex;
+  margin-top: 10px;
+  
+}
+
+.message-input {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline-color: #3399ff;
+  background-color: rgb(255, 255, 255);
+  color: black; /* Este es el cambio para hacer el texto negro */
+}
+
+
+
+.message-input:disabled {
+  background-color: #f0f0f0;
+}
+
+
+
+.send-button {
+  margin-left: 8px;
+  padding: 10px 16px;
+  background-color: #3399ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.send-button:disabled {
+  background-color: #a0c4ff;
+  cursor: not-allowed;
+}
+
+.send-button:not(:disabled):hover {
+  background-color: #267acc;
+}
+
