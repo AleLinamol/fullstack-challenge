@@ -35,6 +35,18 @@ def test_handle_search_users_valid():
         assert "role" in user
         assert "createdAt" in user
 
+def test_search_users_by_email():
+    params = {"query":"@elogia.tech"}
+    result = handle_search_users(params)
+    assert isinstance(result, list)
+    assert any("ana" in user["name"].lower() for user in result)
+    # Validar campos adicionales en resultados
+    for user in result:
+        assert "name" in user
+        assert "role" in user
+        assert "createdAt" in user
+
+
 def test_handle_search_users_invalid_query_type():
     params = {"query": 123}
     with pytest.raises(ValueError) as excinfo:
