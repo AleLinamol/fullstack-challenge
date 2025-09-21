@@ -1,26 +1,20 @@
 import httpx
 import uuid
-from app.config import AGENT_URL, AGENT_KEY
+import asyncio
+from app.config import AGENT_URL, AGENT_KEY, HTTP_TIMEOUT, MAX_RETRIES
 from app.errors import JSONRPCError
 
-class JSONRPCError(Exception):
-    def __init__(self, code, message):
-        super().__init__(f"JSON-RPC Error {code}: {message}")
-        self.code = code
-        self.message = message
-    
-
 async def call_agent(intent: dict) -> dict:
-    if not AGENT_KEY or AGENT_KEY.strip() == "":
+    if not AGENT_KEY:
         raise JSONRPCError(-32000, "Missing or invalid X-Agent-Key")
-    
+
     method = intent["kind"]
     params = {}
 
     if method == "get_user":
         params = {"id": intent["id"]}
     elif method == "search_users":
-        params = {"query": intent["query"], "limit": 5}  # límite fijo o configurable
+        params = {"query": intent["query"], "limit": 5}
     elif method == "list_users":
         params = {"limit": intent["limit"]}
     else:
@@ -39,10 +33,22 @@ async def call_agent(intent: dict) -> dict:
         "X-Agent-Key": AGENT_KEY
     }
 
-    async with httpx.AsyncClient() as client:
-        response = await client.post(AGENT_URL, json=payload, headers=headers)
-        response.raise_for_status()
-        data = response.json()
+    last_exc = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
+                response = await client.post(AGENT_URL, json=payload, headers=headers)
+                response.raise_for_status()
+                data = response.json()
+            break
+        except (httpx.RequestError, httpx.HTTPStatusError) as e:
+            last_exc = e
+            if attempt == MAX_RETRIES:
+                raise JSONRPCError(-32001, f"Error contacting Agent: {str(e)}")
+            await asyncio.sleep(0.5 * attempt)  
+    else:
+        
+        raise JSONRPCError(-32001, "Max retries exceeded contacting Agent")
 
     if "error" in data:
         err = data["error"]
@@ -50,7 +56,5 @@ async def call_agent(intent: dict) -> dict:
 
     if "result" not in data:
         raise JSONRPCError(-32603, "Invalid response: missing result")
-    
-
 
     return data["result"]

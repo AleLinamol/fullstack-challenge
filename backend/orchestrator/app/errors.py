@@ -3,3 +3,9 @@ class JSONRPCError(Exception):
         super().__init__(f"JSON-RPC Error {code}: {message}")
         self.code = code
         self.message = message
+
+class ValidationError(Exception):
+    pass
+
+class UnexpectedError(Exception):
+    pass
