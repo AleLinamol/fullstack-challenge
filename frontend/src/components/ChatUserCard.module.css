@@ -1,0 +1,35 @@
+.messageBubble {
+  max-width: 85%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-size: 14px;
+  text-align: left;
+}
+
+.user {
+  align-self: flex-end;
+  background-color: rgba(68, 173, 233, 0.757);
+  color: #f0f8ff;
+  font-weight: 600;
+}
+
+.system {
+  align-self: flex-start;
+  max-width: 50%;
+  width: max-content;
+  background-color: rgba(71, 67, 188, 0.175);
+  color: #d1d5db;
+  font-weight: 500;
+}
+
+.error {
+  align-self: flex-start;
+  background-color: #f06f6fbd;
+  color: #fff0f0;
+  font-weight: 700;
+}
+
