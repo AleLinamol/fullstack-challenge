@@ -5,8 +5,20 @@ from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field
 from app.intent_parser import parse_intent
 from app.jsonrpc_client import call_agent, JSONRPCError
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = ["http://localhost:5173"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  
+    allow_credentials=True,
+    allow_methods=["*"], 
+    allow_headers=["*"],  
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("orchestrator")
