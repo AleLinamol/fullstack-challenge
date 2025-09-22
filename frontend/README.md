@@ -70,23 +70,6 @@ El frontend implementa una **UI de chat** que permite la interacción con el sis
 
 ---
 
-##  Configuración
-
-El frontend se conecta al servicio backend a través de una URL configurable.  
-Por defecto, esta se encuentra en el archivo:
-
-```
-src/config.js
-```
-
-Ejemplo:
-
-```js
-export const API_URL = "http://localhost:8000/chat";
-```
-
----
-
 ## Build
 
 Para generar la versión de producción:
