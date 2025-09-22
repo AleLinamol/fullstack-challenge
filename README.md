@@ -16,8 +16,8 @@ El objetivo es demostrar habilidades en desarrollo de APIs, comunicación entre 
 - **Chat UI**: interfaz de chat en React que consume el Orchestrator.  
 
 📖 Documentación detallada:  
-- [Agent README](./agent/README.md)  
-- [Orchestrator README](./orchestrator/README.md)  
+- [Agent README](.backend/agent/README.md)  
+- [Orchestrator README](.backend/orchestrator/README.md)  
 - [Frontend README](./frontend/README.md)  
 
 ---
