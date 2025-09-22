@@ -53,7 +53,7 @@ frontend/
 │   ├── App.jsx                   # Componente raíz de la aplicación, renderiza el ChatUI
 │   │
 │   └── index.css                 # Estilos globales de la aplicación
-└── 
+└── README.md                     # Documentación del proyecto
 
 ```
 

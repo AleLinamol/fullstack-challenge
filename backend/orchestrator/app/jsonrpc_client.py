@@ -12,10 +12,16 @@ async def call_agent(intent: dict) -> dict:
     params = {}
 
     if method == "get_user":
+        if "id" not in intent:
+            raise ValueError("El parámetro 'id' es requerido para get_user")
         params = {"id": intent["id"]}
     elif method == "search_users":
-        params = {"query": intent["query"], "limit": 5}
+        if "query" not in intent:
+            raise ValueError("El parámetro 'query' es requerido para search_users")
+        params = {"query": intent["query"]}
     elif method == "list_users":
+        if "limit" not in intent:
+            raise ValueError("El parámetro 'limit' es requerido para list_users")
         params = {"limit": intent["limit"]}
     else:
         raise ValueError("Intento de llamar método desconocido")
@@ -47,7 +53,6 @@ async def call_agent(intent: dict) -> dict:
                 raise JSONRPCError(-32001, f"Error contacting Agent: {str(e)}")
             await asyncio.sleep(0.5 * attempt)  
     else:
-        
         raise JSONRPCError(-32001, "Max retries exceeded contacting Agent")
 
     if "error" in data:

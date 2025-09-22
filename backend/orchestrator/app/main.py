@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("orchestrator")
 
 class ChatRequest(BaseModel):
-    message: str = Field(..., example="usuario 7")
+    message: str = Field(..., example="usuario 2")
 
 class ChatResponse(BaseModel):
     result: dict | list | None = None
@@ -64,7 +64,7 @@ async def chat_endpoint(req: ChatRequest):
         return ChatResponse(
             error="Intención no reconocida.",
             examples=[
-                "usuario 7",
+                "usuario 2",
                 "buscar ana",
                 "lista 3"
             ]

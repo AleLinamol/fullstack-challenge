@@ -20,9 +20,21 @@
 }
 
 .title {
+  font-family: 'Merriweather', serif; /* puedes cambiar por otra */
+  font-style: italic; /* cursiva */
+  font-size: 30px;
   color: #fcfcfc;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-family: 'Merriweather', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #f5f2f2;
   margin-bottom: 20px;
 }
+
 
 /* --- MEDIA QUERIES --- */ 
 

@@ -5,3 +5,5 @@ pytest
 pytest-asyncio
 respx
 asgi-lifespan
+fastapi[all]
+pydantic
