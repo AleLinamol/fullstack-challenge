@@ -41,3 +41,8 @@ Fuentes oficiales verificadas:
 ## Validación pública pendiente
 
 Probar `/health`, consulta por ID, búsqueda, listado, usuario inexistente, mensaje no reconocido y recuperación después de inactividad desde escritorio y móvil. No declarar un despliegue terminado hasta verificar ambas URLs. Si falla, volver a la revisión anterior desde el proveedor sin borrar los servicios.
+
+
+## Instancia creada
+
+Backend activo en https://jahi-chat-backend.onrender.com, servicio `jahi-chat-backend`, plan Free, región Oregon. Creado mediante importación pública del repositorio con los mismos valores del Blueprint: rama de migración, `deploy/Dockerfile`, contexto raíz, comprobación `/health` y despliegue automático desactivado. La clave se generó en Render y no se guarda en el repositorio. Para Vercel, usar `ORCHESTRATOR_URL=https://jahi-chat-backend.onrender.com`.

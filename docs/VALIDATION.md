@@ -41,3 +41,15 @@ No se construyeron imágenes Docker ni se verificó un proveedor remoto. Las con
 - Reproducción: PowerShell `$env:COMBINED="1"; python scripts/verify_integration.py`; Linux/macOS `COMBINED=1 python scripts/verify_integration.py`.
 - La construcción Docker no se pudo ejecutar porque Docker Desktop no tenía un motor activo. La imagen se verificará en el primer build de Render.
 - Aún no se crearon servicios públicos; faltan las conexiones a las cuentas de Vercel y Render.
+
+
+## Backend público en Render Free
+
+Desplegado el 6 de noviembre de 2026 desde `e04f117`.
+
+- URL: https://jahi-chat-backend.onrender.com
+- Salud: `/health` devolvió `{"status":"ok"}`.
+- Consultas reales verificadas: `usuario 2`, `buscar ana`, `lista 3`, `usuario 999` y `hola`.
+- Seis comprobaciones HTTP correctas; la construcción Docker y el arranque público fueron exitosos en Render.
+- Agent permanece en loopback; solamente Orchestrator recibe tráfico público.
+- Frontend público pendiente de importación y despliegue en Vercel.
