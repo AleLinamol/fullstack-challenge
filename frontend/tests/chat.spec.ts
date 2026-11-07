@@ -39,3 +39,30 @@ test("integración real con Next, Orchestrator y Agent", async ({ page, request 
   await expect(page.getByRole("heading", { name: "Carla Ríos" })).toBeVisible();
   await page.screenshot({ path: `test-results/chat-${test.info().project.name}.png`, fullPage: true });
 });
+
+test("espera el arranque sin duplicar la consulta", async ({ page }) => {
+  let attempts = 0;
+  await page.route("**/api/chat", async route => {
+    attempts++;
+    await route.fulfill(attempts === 1 ? { status: 503, json: { code: "SERVICE_WARMING_UP" } } : { json: { result: [user] } });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "usuario 2", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("está iniciándose");
+  await expect(page.getByRole("button", { name: "lista 3", exact: true })).toBeDisabled();
+  await expect(page.getByRole("heading", { name: "Bruno Díaz" })).toBeVisible();
+  expect(attempts).toBe(2);
+  await expect(page.getByText("usuario 2", { exact: true })).toHaveCount(2);
+});
+test("los errores permanentes no se reintentan", async ({ page }) => {
+  let attempts = 0;
+  await page.route("**/api/chat", async route => {
+    attempts++;
+    await route.fulfill({ status: 503, json: { error: "El servicio de chat todavía no está configurado." } });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "usuario 2", exact: true }).click();
+  await expect(page.getByText("El servicio de chat todavía no está configurado.")).toBeVisible();
+  expect(attempts).toBe(1);
+  await expect(page.getByRole("button", { name: "lista 3", exact: true })).toBeEnabled();
+});

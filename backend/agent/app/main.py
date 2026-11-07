@@ -95,3 +95,8 @@ async def rpc_endpoint(request: Request, x_agent_key: str = Header(None)):
     }
     logger.info(f"Response for request id={id_}: {response}")
     return JSONResponse(content=response)
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}

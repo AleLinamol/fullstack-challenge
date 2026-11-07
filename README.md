@@ -58,6 +58,10 @@ pnpm test
 
 Las pruebas de navegador verifican escritorio y móvil: consultas, errores, listas vacías y recuperación. Con los servicios reales iniciados y `ORCHESTRATOR_URL` configurada, ejecutar `INTEGRATION=1 pnpm test` (PowerShell: `$env:INTEGRATION="1"; pnpm test`).
 
+## Alojamiento gratuito
+
+La configuración `render.yaml` prepara una instancia Render Free con ambos servicios FastAPI. El frontend se prepara para Vercel Hobby. La primera consulta espera y reintenta mientras el backend despierta. Ver la [guía de despliegue](docs/DEPLOYMENT.md). No se creó infraestructura pública.
+
 ## Documentación
 
 - [Decisiones de migración](docs/MIGRATION.md)

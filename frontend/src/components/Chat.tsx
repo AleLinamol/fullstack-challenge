@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { parseReply, type Reply } from "../lib/chat";
+import { type Reply } from "../lib/chat";
+import { sendChat } from "../lib/send-chat";
 type Message = Reply & { id: number; from: "user" | "system" };
 const examples = ["usuario 2", "buscar ana", "lista 3"];
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [waking, setWaking] = useState(false);
   const busy = useRef(false);
   const end = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -18,13 +20,10 @@ export default function Chat() {
     if (!message || busy.current) return;
     busy.current = true;
     setLoading(true);
+    setWaking(false);
     setText("");
     setMessages(prev => [...prev, { id: sequence.current++, from: "user", text: message }]);
-    let reply: Reply;
-    try {
-      const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message }), signal: AbortSignal.timeout(30000) });
-      reply = parseReply(await response.json(), response.ok);
-    } catch { reply = { error: "No pudimos completar la consulta. Revisa tu conexión e inténtalo nuevamente." }; }
+    const reply = await sendChat(message, () => setWaking(true));
     setMessages(prev => [...prev, { ...reply, id: sequence.current++, from: "system" }]);
     busy.current = false;
     setLoading(false);
@@ -57,7 +56,7 @@ export default function Chat() {
               <p className="mt-3 text-xs text-slate-400">Creado: {Number.isNaN(Date.parse(user.createdAt)) ? "Fecha no disponible" : new Intl.DateTimeFormat("es-AR", { timeZone: "UTC" }).format(new Date(user.createdAt))}</p>
             </div>)}</div>)}
           </article>)}
-          {loading && <p role="status" className="animate-pulse text-sm text-violet-200">Consultando el directorio…</p>}
+          {loading && <p role="status" className="animate-pulse text-sm text-violet-200">{waking ? "El servicio está iniciándose. La primera consulta puede tardar hasta 3 minutos…" : "Consultando el directorio…"}</p>}
           <div ref={end} />
         </div>
         <form onSubmit={submit} className="mt-auto flex gap-2 border-t border-slate-700 p-4 sm:p-6">

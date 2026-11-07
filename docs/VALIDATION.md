@@ -29,3 +29,15 @@ El script inicia ambos backends con una clave exclusiva de prueba y usa el front
 ## Pendiente de infraestructura pública
 
 No se construyeron imágenes Docker ni se verificó un proveedor remoto. Las configuraciones de despliegue necesitan validación en el proveedor elegido. No se hizo push, PR ni despliegue. La demo pública y sus costos requieren autorización y elección de cuenta.
+
+
+## Actualización para alojamiento gratuito
+
+- Compilación de producción y TypeScript: correctos.
+- ESLint: correcto.
+- Orchestrator: **20 pruebas aprobadas**, incluida indisponibilidad temporal del Agent como HTTP 503.
+- Playwright: **8 pruebas aprobadas** en escritorio y móvil, incluidas recuperación tras arranque y ausencia de reintentos en errores permanentes.
+- Arranque conjunto mediante `deploy/start.py`: correcto; `/health` comprueba ambos servicios y las consultas reales atravesaron toda la cadena.
+- Reproducción: PowerShell `$env:COMBINED="1"; python scripts/verify_integration.py`; Linux/macOS `COMBINED=1 python scripts/verify_integration.py`.
+- La construcción Docker no se pudo ejecutar porque Docker Desktop no tenía un motor activo. La imagen se verificará en el primer build de Render.
+- Aún no se crearon servicios públicos; faltan las conexiones a las cuentas de Vercel y Render.

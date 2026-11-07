@@ -74,3 +74,10 @@ def test_chat_response_content_type(monkeypatch):
 
     response = client.post("/chat", json={"message": "usuario 1"})
     assert response.headers["content-type"] == "application/json"
+
+
+def test_agent_unavailable_is_retryable(monkeypatch):
+    async def mock_call_agent(intent):
+        raise JSONRPCError(-32001, "Agent starting")
+    monkeypatch.setattr("app.main.call_agent", mock_call_agent)
+    assert client.post("/chat", json={"message": "usuario 2"}).status_code == 503

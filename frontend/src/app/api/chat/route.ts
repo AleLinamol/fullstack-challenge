@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 export const runtime = "nodejs";
+export const maxDuration = 15;
 export async function POST(request: Request) {
   let body: unknown;
   try { body = await request.json(); } catch {
@@ -14,13 +15,14 @@ export async function POST(request: Request) {
     const response = await fetch(`${base.replace(/\/$/, "")}/chat`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: body.message.trim() }),
-      signal: AbortSignal.timeout(25000), cache: "no-store",
+      signal: AbortSignal.timeout(10000), cache: "no-store",
     });
-    if (response.status >= 500) throw new Error("Upstream unavailable");
+    if ([502, 503, 504].includes(response.status)) throw new Error("Upstream starting");
+    if (response.status >= 500) return NextResponse.json({ error: "El servicio no pudo procesar la consulta." }, { status: 502 });
     const data: unknown = await response.json();
     if (!data || typeof data !== "object") throw new Error("Invalid upstream response");
     return NextResponse.json(data, { status: response.status });
   } catch {
-    return NextResponse.json({ error: "No pudimos conectar con el servicio. Inténtalo nuevamente en unos instantes." }, { status: 502 });
+    return NextResponse.json({ code: "SERVICE_WARMING_UP", error: "El servicio está iniciándose. Reintentando…" }, { status: 503, headers: { "Retry-After": "2" } });
   }
 }

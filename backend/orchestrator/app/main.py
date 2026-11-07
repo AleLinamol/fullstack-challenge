@@ -1,4 +1,6 @@
 import logging
+import httpx
+from app.config import AGENT_URL
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -42,6 +44,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @app.exception_handler(JSONRPCError)
 async def jsonrpc_exception_handler(request: Request, exc: JSONRPCError):
     logger.error(f"JSONRPCError: {exc}")
+    if exc.code == -32001:
+        return JSONResponse(status_code=503, content={"error": "Agent temporalmente no disponible"})
     return JSONResponse(
         status_code=400,
         content={"detail": str(exc)},
@@ -72,3 +76,17 @@ async def chat_endpoint(req: ChatRequest):
     result = await call_agent(intent)
     logger.info(f"Agent result: {result}")
     return ChatResponse(result=result)
+
+
+@app.get("/health")
+async def health():
+    try:
+        if not AGENT_URL:
+            raise ValueError("Agent URL not configured")
+        url = str(httpx.URL(AGENT_URL).copy_with(path="/health"))
+        async with httpx.AsyncClient(timeout=2) as client:
+            response = await client.get(url)
+            response.raise_for_status()
+        return {"status": "ok"}
+    except (httpx.HTTPError, ValueError):
+        return JSONResponse(status_code=503, content={"status": "starting"})
