@@ -21,4 +21,4 @@ Prompt final:
 
 Compilación de producción, TypeScript, ESLint y ocho pruebas de navegador correctos con el nuevo diseño. Se revisaron las capturas de escritorio y móvil con servicios FastAPI reales. El fondo se incluye como archivo local de la aplicación, sin dependencias de imágenes remotas.
 
-Estado: propuesta preparada localmente para revisión visual antes de actualizar la demo pública.
+Estado: diseño aprobado y publicado en https://jahi-chat.vercel.app desde la revisión `b50ad6e`. Vercel confirmó el despliegue de producción y se verificaron el fondo, la marca Nexo y una consulta real desde el navegador público.
