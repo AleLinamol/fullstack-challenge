@@ -28,7 +28,7 @@ METHODS = {
 
 @app.post("/rpc")
 async def rpc_endpoint(request: Request, x_agent_key: str = Header(None)):
-    if x_agent_key != AGENT_KEY:
+    if not AGENT_KEY or x_agent_key != AGENT_KEY:
         logger.warning("Unauthorized access attempt with invalid X-Agent-Key header")
         return JSONResponse(
             status_code=401,

@@ -1,133 +1,68 @@
-# _Fullstack Challenge_
+# Fullstack Challenge — Jahi
 
-Este proyecto corresponde a un **challenge fullstack** que integra dos servicios backend (Agent y Orchestrator) y un frontend en React (Chat UI).  
-El objetivo es demostrar habilidades en desarrollo de APIs, comunicación entre servicios y construcción de interfaces de usuario.
+Chat de usuarios con **Next.js App Router, React, TypeScript y Tailwind CSS**. Conserva los servicios **Orchestrator y Agent en Python/FastAPI** y su contrato REST/JSON-RPC.
 
----
-
-## 🧩 Arquitectura general
-
-```
-[Frontend Chat UI]  →  [Orchestrator (FastAPI)]  →  [Agent (FastAPI JSON-RPC)]
+```text
+Navegador → Next.js /api/chat → Orchestrator /chat → Agent /rpc → seed.json
 ```
 
-- **Agent**: servicio JSON-RPC para consulta de usuarios desde un dataset estático.  
-- **Orchestrator**: servicio REST que interpreta lenguaje natural y consulta al Agent.  
-- **Chat UI**: interfaz de chat en React que consume el Orchestrator.  
+## Ejecutar localmente
 
-📖 Documentación detallada:  
-- [Agent README](./backend/agent/README.md)  
-- [Orchestrator README](./backend/orchestrator/README.md)  
-- [Frontend README](./frontend/README.md)  
+Requisitos: Node.js 20.9 o superior, pnpm 11 y Python 3.13. Ejecutar desde la raíz del repositorio:
 
----
+```sh
+python -m venv .venv
+# Activar: Windows .venv\Scripts\Activate.ps1; Linux/macOS source .venv/bin/activate
+python -m pip install -r backend/agent/requirements.txt -r backend/orchestrator/requirements.txt
+```
 
-## ⚙️ Requisitos generales
+Copiar los tres archivos `.env.example` a `.env` en sus respectivas carpetas. Usar el mismo `AGENT_KEY` en ambos servicios. Es un secreto entre servidores: nunca incluirlo en el frontend ni en Git.
 
-- Python 3.8+  
-- Node.js 18+  
-- npm o yarn  
-- uvicorn, FastAPI, pytest, respx  
+En tres terminales, con el entorno Python activado donde corresponda:
 
----
-
-## 🚀 Instalación y ejecución
-
-### 1. Agent (backend JSON-RPC)
-
-```bash
-cd agent
-pip install -r requirements.txt
+```sh
+cd backend/agent
 uvicorn app.main:app --reload --port 8001
 ```
 
-Servicio disponible en: [http://localhost:8001/rpc](http://localhost:8001/rpc)
-
-Ejemplo con curl en Linux:
-
-```bash
-curl -X POST http://localhost:8001/rpc   -H "Content-Type: application/json"   -H "X-Agent-Key: challenge-token-123"   -d '{
-    "jsonrpc": "2.0",
-    "method": "search_users",
-    "params": { "query": "ana" },
-    "id": 1
-  }'
-```
-
-Ejemplo con curl en Windows:
-
-```bash
-$body = @'
-{
-    "jsonrpc": "2.0",
-    "method": "search_users",
-    "params": { "query": "ana" },
-    "id": 1
-}
-'@
-
-Invoke-WebRequest -Uri "http://localhost:8001/rpc" -Method POST -Headers @{ "Content-Type" = "application/json"; "X-Agent-Key" = "challenge-token-123" } -Body $body
-```
-
----
-
-### 2. Orchestrator (backend FastAPI)
-
-```bash
-cd orchestrator
-pip install -r requirements.txt
+```sh
+cd backend/orchestrator
 uvicorn app.main:app --reload --port 8000
 ```
 
-Servicio disponible en: [http://localhost:8000/chat](http://localhost:8000/chat)
-
-Ejemplo con curl en Linux:
-
-```bash
-curl -X POST http://localhost:8000/chat   -H "Content-Type: application/json"   -d '{ "message": "usuario 2" }'
-```
-
-Ejemplo con curl en Windows:
-
-```bash
-Invoke-WebRequest -Uri "http://localhost:8000/chat" -Method POST -Headers @{"Content-Type"="application/json"} -Body '{"message": "usuario 2"}'
-```
- 
----
-
-### 3. Chat UI (frontend React)
-
-```bash
+```sh
 cd frontend
-npm install
-npm run dev
+pnpm install --frozen-lockfile
+pnpm dev
 ```
 
-Interfaz disponible en: [http://localhost:5173](http://localhost:5173)
+Abrir http://localhost:3000 y probar `usuario 2`, `buscar ana`, `lista 3`, `usuario 999` y un mensaje no reconocido.
 
----
+## Verificación
 
-## 📂 Estructura del proyecto
+Cada backend usa un paquete llamado `app`: ejecutar las suites por separado, desde cada carpeta, con `AGENT_KEY` configurado. Para Orchestrator configurar también `AGENT_URL`.
 
-```
-fullstack-challenge/
-├── agent/          # Backend JSON-RPC (usuarios)
-├── orchestrator/   # Backend REST (intérprete de mensajes)
-├── frontend/       # Chat UI en React
-└── README.md       # Documentación general (este archivo)
+```sh
+python -m pytest tests -q
 ```
 
----
+Frontend, desde `frontend/`:
 
-## ✅ Tests
+```sh
+pnpm lint
+pnpm typecheck
+pnpm build
+pnpm exec playwright install chromium
+pnpm test
+```
 
-- **Agent**: `pytest tests/`  
-- **Orchestrator**: `pytest tests/` (requiere `respx`)  
+Las pruebas de navegador verifican escritorio y móvil: consultas, errores, listas vacías y recuperación. Con los servicios reales iniciados y `ORCHESTRATOR_URL` configurada, ejecutar `INTEGRATION=1 pnpm test` (PowerShell: `$env:INTEGRATION="1"; pnpm test`).
 
----
+## Documentación
 
-## ✨ Funcionalidades destacadas
-
-- **Agent**: búsqueda y listado de usuarios vía JSON-RPC.  
-- **Orchestrator**: parser de lenguaje natural → llamadas al Agent.  
-- **Chat UI**: interfaz tipo chat responsive para interactuar con el sistema.  
+- [Decisiones de migración](docs/MIGRATION.md)
+- [Preparación del despliegue](docs/DEPLOYMENT.md)
+- [Resultados de pruebas](docs/VALIDATION.md)
+- [Frontend](frontend/README.md)
+- [Agent](backend/agent/README.md)
+- [Orchestrator](backend/orchestrator/README.md)
