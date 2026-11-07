@@ -6,11 +6,11 @@ def test_handle_get_user_valid():
     user = users[0]
     params = {"id": user["id"]}
     result = handle_get_user(params)
-    assert result == user
+    assert result == [user]
     # Validar campos adicionales
-    assert "email" in result
-    assert "role" in result
-    assert "createdAt" in result
+    assert "email" in result[0]
+    assert "role" in result[0]
+    assert "createdAt" in result[0]
 
 def test_handle_get_user_invalid_id_type():
     params = {"id": "not-an-int"}
@@ -21,7 +21,7 @@ def test_handle_get_user_invalid_id_type():
 def test_handle_get_user_not_found():
     params = {"id": 999999}  # ID que no existe
     result = handle_get_user(params)
-    assert result is None
+    assert result == []
 
 def test_handle_search_users_valid():
     # Buscar por nombre parcial, case insensitive

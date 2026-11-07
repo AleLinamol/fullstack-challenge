@@ -1,0 +1,14 @@
+# Una sola instancia gratuita; Agent queda accesible solo por localhost.
+services:
+  - type: web
+    name: jahi-chat-backend
+    runtime: docker
+    plan: free
+    branch: migration/next-typescript-tailwind
+    dockerfilePath: ./deploy/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: "off"
+    envVars:
+      - key: AGENT_KEY
+        generateValue: true

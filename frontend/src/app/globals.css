@@ -1,0 +1,5 @@
+@import "tailwindcss";
+:root { color-scheme: dark; }
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #0b1020; color: #edf0fa; }
+button:not(:disabled) { cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid #c4b5fd; outline-offset: 4px; }
