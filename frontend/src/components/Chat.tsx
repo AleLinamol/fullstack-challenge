@@ -31,41 +31,52 @@ export default function Chat() {
   }
   function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); void send(text); }
   return (
-    <main className="mx-auto flex min-h-dvh max-w-4xl flex-col px-4 py-6 sm:px-8 sm:py-12">
-      <header className="mb-6 flex items-center justify-between gap-4">
-        <Link href="/" className="text-lg font-bold tracking-tight">jahi<span className="text-violet-400">.</span></Link>
-        <span className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300">Fullstack Challenge</span>
+    <main className="page-shell">
+      <header className="site-header">
+        <Link href="/" className="brand" aria-label="Nexo, inicio">
+          <span className="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M10 21V11l12 10V11" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="10" cy="10" r="3" fill="currentColor"/><circle cx="22" cy="22" r="3" fill="currentColor"/></svg></span>
+          <span>nexo<span className="brand-period">.</span></span>
+        </Link>
+        <span className="demo-badge"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m8 2 1.5 4.5L14 8l-4.5 1.5L8 14l-1.5-4.5L2 8l4.5-1.5L8 2Z" stroke="currentColor" strokeLinejoin="round"/></svg>Demo interactiva</span>
       </header>
-      <section className="flex min-h-[75dvh] flex-1 flex-col overflow-hidden rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl" aria-labelledby="chat-title">
-        <div className="border-b border-slate-700 p-6 sm:p-8">
-          <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-violet-300 uppercase">Directorio de usuarios</p>
-          <h1 id="chat-title" className="text-3xl font-semibold tracking-tight">Una consulta, una conversación.</h1>
-          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-300">Busca por nombre, consulta un usuario por su ID o pide una lista. Los datos de este directorio son de demostración.</p>
-          <div className="mt-5 flex flex-wrap gap-2">{examples.map(example => <button key={example} disabled={loading} onClick={() => void send(example)} className="rounded-full border border-violet-400/40 px-3 py-2 text-sm text-violet-200 transition hover:bg-violet-400/10 disabled:opacity-40">{example}</button>)}</div>
+      <section className="chat-panel" aria-labelledby="chat-title">
+        <div className="chat-heading">
+          <p className="eyebrow">Personas que conectan</p>
+          <h1 id="chat-title">Encontrá a quien buscás.</h1>
+          <p className="intro">Un nombre, un ID o una lista. Tu próxima conexión empieza con una consulta.</p>
+          <div className="suggestions">{examples.map(example => <button key={example} disabled={loading} onClick={() => void send(example)} className="suggestion"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M4 4h8v8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>{example}</button>)}</div>
         </div>
-        <div role="log" aria-label="Conversación" aria-live="polite" aria-relevant="additions" aria-busy={loading} className="flex max-h-[55dvh] min-h-64 flex-1 flex-col gap-4 overflow-y-auto p-4 sm:p-8">
-          {messages.length === 0 && <div className="my-auto py-8 text-center text-slate-400"><p className="text-lg text-slate-200">¿A quién buscas hoy?</p><p className="mt-2 text-sm">Elige un ejemplo o escribe tu consulta abajo.</p></div>}
-          {messages.map(message => <article key={message.id} className={`max-w-full rounded-2xl p-4 ${message.from === "user" ? "ml-auto bg-violet-600 text-white" : message.error ? "border border-rose-400/40 bg-rose-950/30 text-rose-200" : "mr-auto w-full bg-slate-800"}`}>
-            <p className="mb-2 text-xs font-semibold opacity-70">{message.from === "user" ? "Tú" : "Asistente"}</p>
+        <div role="log" aria-label="Conversación" aria-live="polite" aria-relevant="additions" aria-busy={loading} className="conversation">
+          {messages.length === 0 && <div className="empty-state">
+            <div className="empty-symbol" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M31 25.5a4 4 0 0 1-4 4H16l-7 5v-9a4 4 0 0 1-3-4v-12a4 4 0 0 1 4-4h17a4 4 0 0 1 4 4v16Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><circle cx="13" cy="17" r="1.5" fill="currentColor"/><circle cx="19" cy="17" r="1.5" fill="currentColor"/><circle cx="25" cy="17" r="1.5" fill="currentColor"/></svg></div>
+            <p className="empty-title">¿A quién buscás hoy?</p>
+            <p className="empty-description">Probá una sugerencia o escribí tu consulta.<br/>Nosotros encontramos la conexión.</p>
+          </div>}
+          {messages.map(message => <article key={message.id} className={`message ${message.from === "user" ? "message-user" : message.error ? "message-error" : "message-system"}`}>
+            <p className="message-author">{message.from === "user" ? "Vos" : "Nexo"}</p>
             {message.text && <p className="break-words text-sm leading-6">{message.text}</p>}
-            {message.error && <p className="text-sm">{message.error}</p>}
-            {message.examples && <p className="mt-2 text-xs">Prueba con: {message.examples.join(" · ")}</p>}
-            {message.users && (message.users.length === 0 ? <p>No se encontraron usuarios.</p> : <div className="grid gap-3 sm:grid-cols-2">{message.users.map(user => <div key={user.id} className="min-w-0 rounded-xl border border-slate-600 bg-slate-900/60 p-4">
-              <div className="flex items-center justify-between gap-3"><span className="text-xs text-violet-300">ID {user.id}</span><span className="rounded-full bg-slate-700 px-2 py-1 text-xs">{user.role}</span></div>
-              <h2 className="mt-3 font-semibold">{user.name}</h2><p className="mt-1 break-all text-sm text-slate-300">{user.email}</p>
-              <p className="mt-3 text-xs text-slate-400">Creado: {Number.isNaN(Date.parse(user.createdAt)) ? "Fecha no disponible" : new Intl.DateTimeFormat("es-AR", { timeZone: "UTC" }).format(new Date(user.createdAt))}</p>
+            {message.error && <p className="text-sm leading-6">{message.error}</p>}
+            {message.examples && <p className="mt-2 text-xs opacity-80">Probá con: {message.examples.join(" · ")}</p>}
+            {message.users && (message.users.length === 0 ? <p className="text-sm">No se encontraron usuarios.</p> : <div className="grid gap-3 sm:grid-cols-2">{message.users.map(user => <div key={user.id} className="user-card">
+              <div className="mb-4 flex items-center justify-between gap-3"><span className="user-id">ID {user.id}</span><span className="role-badge">{user.role}</span></div>
+              <div className="flex items-center gap-3"><span className="user-avatar" aria-hidden="true">{user.name.split(" ").map(part => part[0]).slice(0, 2).join("")}</span><h2 className="min-w-0 text-sm font-semibold">{user.name}</h2></div>
+              <p className="mt-3 break-all text-sm text-white/85">{user.email}</p>
+              <p className="mt-3 text-xs text-white/65">Creado: {Number.isNaN(Date.parse(user.createdAt)) ? "Fecha no disponible" : new Intl.DateTimeFormat("es-AR", { timeZone: "UTC" }).format(new Date(user.createdAt))}</p>
             </div>)}</div>)}
           </article>)}
-          {loading && <p role="status" className="animate-pulse text-sm text-violet-200">{waking ? "El servicio está iniciándose. La primera consulta puede tardar hasta 3 minutos…" : "Consultando el directorio…"}</p>}
+          {loading && <p role="status" className="loading-message"><span className="loading-dot" aria-hidden="true"/>{waking ? "El servicio está iniciándose. La primera consulta puede tardar hasta 3 minutos…" : "Buscando tu conexión…"}</p>}
           <div ref={end} />
         </div>
-        <form onSubmit={submit} className="mt-auto flex gap-2 border-t border-slate-700 p-4 sm:p-6">
-          <label htmlFor="message" className="sr-only">Tu consulta</label>
-          <input ref={input} id="message" value={text} onChange={event => setText(event.target.value)} maxLength={500} readOnly={loading} placeholder="Por ejemplo: buscar ana" autoComplete="off" className="min-w-0 flex-1 rounded-xl border border-slate-600 bg-slate-950 px-4 py-3 text-sm placeholder:text-slate-500" />
-          <button disabled={loading || !text.trim()} type="submit" className="rounded-xl bg-violet-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-40">Enviar</button>
-        </form>
+        <div className="composer-area">
+          <form onSubmit={submit} className="composer">
+            <label htmlFor="message" className="sr-only">Tu consulta</label>
+            <input ref={input} id="message" value={text} onChange={event => setText(event.target.value)} maxLength={500} readOnly={loading} placeholder="Escribí una consulta…" autoComplete="off" className="composer-input" />
+            <button disabled={loading || !text.trim()} type="submit" className="send-button"><span>Enviar</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg></button>
+          </form>
+          <p className="composer-hint">Un pequeño directorio. Grandes conexiones.<span>Enter para enviar ↵</span></p>
+        </div>
       </section>
-      <footer className="pt-5 text-center text-xs text-slate-400">Next.js · TypeScript · Tailwind CSS · FastAPI</footer>
+      <footer className="site-footer"><span>Fullstack Challenge<span className="footer-separator">/</span>Datos de demostración</span><span>Hecho para conectar.</span></footer>
     </main>
   );
 }

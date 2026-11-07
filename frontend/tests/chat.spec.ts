@@ -31,8 +31,10 @@ test("integración real con Next, Orchestrator y Agent", async ({ page, request 
   const invalid = await request.post("/api/chat", { data: { message: " " } });
   expect(invalid.status()).toBe(400);
   await page.goto("/");
+  await page.screenshot({ path: `test-results/nexo-home-${test.info().project.name}.png`, fullPage: true, animations: "disabled" });
   await page.getByRole("button", { name: "usuario 2", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Bruno Díaz" })).toBeVisible();
+  await page.screenshot({ path: `test-results/nexo-detail-${test.info().project.name}.png`, fullPage: true, animations: "disabled" });
   await page.getByRole("button", { name: "buscar ana", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Ana López" })).toBeVisible();
   await page.getByRole("button", { name: "lista 3", exact: true }).click();
