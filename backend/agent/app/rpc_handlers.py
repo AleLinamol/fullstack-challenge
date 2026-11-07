@@ -25,7 +25,10 @@ def handle_list_users(params: Dict[str, Any]) -> List[Dict[str, Any]]:
         if not isinstance(limit, int) or limit < 0:
             raise ValueError("El parámetro 'limit' debe ser un entero no negativo")
         if limit > total_users:
-            raise ValueError(f"No hay suficientes usuarios en el JSON. Solicitados: {limit}, Disponibles: {total_users}")
+            if total_users == 0:
+                raise ValueError("Todavía no hay usuarios cargados en este directorio. Probá nuevamente más adelante.")
+            available = "1 disponible" if total_users == 1 else f"{total_users} disponibles"
+            raise ValueError(f"Pediste {limit} usuarios, pero por ahora solo hay {available}. Probá con «lista {total_users}».")
         return all_users[:limit]
     
     return all_users

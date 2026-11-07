@@ -63,3 +63,22 @@ def test_handle_list_users():
         assert "email" in user
         assert "role" in user
         assert "createdAt" in user
+
+
+def test_list_too_large_remains_an_error_with_friendly_message():
+    requested = len(users) + 5
+    with pytest.raises(ValueError) as excinfo:
+        handle_list_users({"limit": requested})
+    assert str(excinfo.value) == f"Pediste {requested} usuarios, pero por ahora solo hay {len(users)} disponibles. Probá con «lista {len(users)}»."
+
+
+def test_list_empty_directory_remains_an_error(monkeypatch):
+    monkeypatch.setattr("app.rpc_handlers.list_all_users", lambda: [])
+    with pytest.raises(ValueError, match="Todavía no hay usuarios cargados"):
+        handle_list_users({"limit": 10})
+
+
+def test_list_single_user_error_uses_singular(monkeypatch):
+    monkeypatch.setattr("app.rpc_handlers.list_all_users", lambda: [users[0]])
+    with pytest.raises(ValueError, match="solo hay 1 disponible"):
+        handle_list_users({"limit": 10})

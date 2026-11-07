@@ -39,6 +39,12 @@ test("integración real con Next, Orchestrator y Agent", async ({ page, request 
   await expect(page.getByRole("heading", { name: "Ana López" })).toBeVisible();
   await page.getByRole("button", { name: "lista 3", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Carla Ríos" })).toBeVisible();
+  await page.getByRole("textbox", { name: "Tu consulta" }).fill("lista 10");
+  await page.getByRole("textbox", { name: "Tu consulta" }).press("Enter");
+  const latestReply = page.getByRole("log", { name: "Conversación" }).locator("article").last();
+  await expect(latestReply.getByText("Pediste 10 usuarios, pero por ahora solo hay 5 disponibles. Probá con «lista 5».")).toBeVisible();
+  await expect(latestReply).toHaveClass(/message-error/);
+  await expect(latestReply.getByRole("heading")).toHaveCount(0);
   await page.screenshot({ path: `test-results/chat-${test.info().project.name}.png`, fullPage: true });
 });
 
