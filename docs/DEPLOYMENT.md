@@ -16,11 +16,11 @@ El Agent escucha exclusivamente en `127.0.0.1:8001`; el Orchestrator escucha en 
 
 ## Vercel
 
-1. Usar cuenta personal **Hobby**, importar el mismo repositorio y seleccionar la rama de migración para la primera demo.
+1. Usar cuenta personal **Hobby**, importar el mismo repositorio y seleccionar la rama `deploy-next` para la demo.
 2. Directorio raíz: `frontend`. Framework: Next.js. Instalación: `pnpm install --frozen-lockfile`; compilación: `pnpm build`. El repositorio fija pnpm 11.25.0.
 3. Configurar `ORCHESTRATOR_URL` con el origen HTTPS de Render, sin `/chat` final. Aplicar al entorno que se despliegue (Preview o Production).
 4. Desplegar y verificar la dirección gratuita `vercel.app`. No se necesita dominio propio.
-5. Si el proyecto se vincula antes de fusionar la PR, revisar que la vista previa use la rama de migración. Cambiar la rama de producción a `main` solamente después de fusionar los cambios y confirmar cuál es la rama principal del repositorio.
+5. Si el proyecto se vincula antes de fusionar la PR, revisar que la vista previa use `deploy-next`. Cambiar la rama de producción a `main` solamente después de fusionar los cambios y confirmar cuál es la rama principal del repositorio.
 
 ## Arranque después de inactividad
 
@@ -46,3 +46,16 @@ Probar `/health`, consulta por ID, búsqueda, listado, usuario inexistente, mens
 ## Instancia creada
 
 Backend activo en https://jahi-chat-backend.onrender.com, servicio `jahi-chat-backend`, plan Free, región Oregon. Creado mediante importación pública del repositorio con los mismos valores del Blueprint: rama de migración, `deploy/Dockerfile`, contexto raíz, comprobación `/health` y despliegue automático desactivado. La clave se generó en Render y no se guarda en el repositorio. Para Vercel, usar `ORCHESTRATOR_URL=https://jahi-chat-backend.onrender.com`.
+
+
+## Frontend publicado
+
+- Demo: https://jahi-chat.vercel.app
+- Cuenta: AleLinamol, Vercel Hobby.
+- Proyecto: `jahi-chat`; raíz `frontend`; framework Next.js; Node.js 24.x.
+- Rama de producción: `deploy-next`, creada desde la migración para evitar el problema del importador con nombres de rama que contienen `/`.
+- Revisión publicada: `011a42a`. Despliegue: `dpl_D1E1hbHNpuoiwSbdz3RAnrnvJCBD`.
+- `ORCHESTRATOR_URL` configurada para Production y Preview.
+- GitHub está vinculado y los pushes a `deploy-next` generan despliegues de producción. Los cambios en otras ramas generan vistas previas.
+- La rama `main` no se modificó ni se fusionó automáticamente. Antes de cambiar la rama de producción a `main`, fusionar la PR y verificar esa revisión.
+- La documentación posterior se publica en la rama de migración; no se vuelve a desplegar producción por cambios solamente documentales de esta tarea.

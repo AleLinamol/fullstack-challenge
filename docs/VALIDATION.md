@@ -1,55 +1,47 @@
 # Registro de validación
 
-Validación local: 6 de noviembre de 2026 (Argentina).
+Validación y publicación: 6 de noviembre de 2026 (Argentina).
 
-## Resultados
+## Direcciones públicas
 
-- Next.js 16.4.5: compilación de producción correcta, incluida comprobación TypeScript.
-- ESLint: sin errores ni advertencias después de corregir la navegación con Link.
-- TypeScript: `tsc --noEmit` sin errores.
-- Agent: **11 pruebas aprobadas**, incluidos acceso no autorizado y ausencia de clave.
-- Orchestrator: **19 pruebas aprobadas**. Advertencia preexistente de Pydantic sobre `Field(example=...)`.
-- Playwright/Chromium: **4 pruebas aprobadas** en escritorio y móvil. Dos verifican respuestas simuladas para escenarios de error; dos consultan realmente Next.js → Orchestrator → Agent.
-- Integración real: consultas `usuario 2`, `buscar ana`, `lista 3` y rechazo de entrada vacía por el proxy.
-- Revisión visual de capturas en escritorio y móvil. Sin desbordamiento horizontal en los escenarios automatizados.
-- `git diff --check`: correcto.
+- Aplicación: https://jahi-chat.vercel.app
+- Backend: https://jahi-chat-backend.onrender.com
 
-Se actualizaron dos pruebas antiguas del Agent que esperaban un objeto/None; la implementación existente entrega listas y listas vacías. No se modificó ese contrato para hacer pasar las pruebas.
+## Comprobaciones locales
 
-## Reproducir integración
+- Compilación de producción de Next.js 16.4.5 y TypeScript: correctos.
+- ESLint: sin errores ni advertencias.
+- Agent: 11 pruebas aprobadas, incluidos acceso no autorizado y ausencia de clave.
+- Orchestrator: 20 pruebas aprobadas, incluida indisponibilidad temporal del Agent como HTTP 503. Advertencia heredada de Pydantic sobre `Field(example=...)`.
+- Playwright: 8 pruebas aprobadas en escritorio y móvil. Incluyen integración real con ambos servicios, listas vacías, errores, recuperación durante el arranque y ausencia de reintentos en errores permanentes.
+- Arranque conjunto mediante `deploy/start.py`: correcto. `/health` comprueba ambos servicios.
+- Se corrigieron dos pruebas antiguas del Agent para reflejar el contrato existente de listas y listas vacías; ese contrato no cambió.
 
-Instalar dependencias Python en `.venv`, instalar frontend y navegador, compilar frontend y ejecutar desde la raíz:
+Reproducir la integración después de instalar dependencias y compilar el frontend:
 
 ```sh
+# PowerShell
+$env:COMBINED="1"
 python scripts/verify_integration.py
 ```
 
-El script inicia ambos backends con una clave exclusiva de prueba y usa el frontend de producción mediante Playwright. Libera sus procesos de backend al terminar. Requiere puertos 8000, 8001 y 3000 disponibles; no reutilizar un frontend ajeno durante esta verificación.
+En Linux/macOS: `COMBINED=1 python scripts/verify_integration.py`. Requiere puertos 8000, 8001 y 3000 disponibles y un navegador Playwright instalado.
 
-## Pendiente de infraestructura pública
+## Construcción y publicación
 
-No se construyeron imágenes Docker ni se verificó un proveedor remoto. Las configuraciones de despliegue necesitan validación en el proveedor elegido. No se hizo push, PR ni despliegue. La demo pública y sus costos requieren autorización y elección de cuenta.
+- Render construyó correctamente `deploy/Dockerfile` en Linux y publicó ambos procesos en una instancia Free. Backend en revisión `e04f117`; Agent solo escucha en loopback.
+- El primer build de Vercel detectó dos módulos omitidos de Git por una regla heredada `lib/`. Se corrigió `.gitignore` y se incluyeron `frontend/src/lib/chat.ts` y `send-chat.ts`.
+- Vercel compiló y publicó correctamente la revisión `011a42a` desde un checkout remoto limpio. Se fijó Node.js 24.x.
+- Producción usa `deploy-next`, sin modificar `main`. No se contrató ningún servicio pago.
 
+## Pruebas públicas
 
-## Actualización para alojamiento gratuito
+Backend: seis comprobaciones HTTP correctas: `/health`, `usuario 2`, `buscar ana`, `lista 3`, `usuario 999` y `hola`.
 
-- Compilación de producción y TypeScript: correctos.
-- ESLint: correcto.
-- Orchestrator: **20 pruebas aprobadas**, incluida indisponibilidad temporal del Agent como HTTP 503.
-- Playwright: **8 pruebas aprobadas** en escritorio y móvil, incluidas recuperación tras arranque y ausencia de reintentos en errores permanentes.
-- Arranque conjunto mediante `deploy/start.py`: correcto; `/health` comprueba ambos servicios y las consultas reales atravesaron toda la cadena.
-- Reproducción: PowerShell `$env:COMBINED="1"; python scripts/verify_integration.py`; Linux/macOS `COMBINED=1 python scripts/verify_integration.py`.
-- La construcción Docker no se pudo ejecutar porque Docker Desktop no tenía un motor activo. La imagen se verificará en el primer build de Render.
-- Aún no se crearon servicios públicos; faltan las conexiones a las cuentas de Vercel y Render.
+Frontend: siete comprobaciones HTTP correctas sin cookies ni autenticación: página inicial HTTP 200, las cinco consultas anteriores mediante `/api/chat`, y rechazo de una consulta vacía con HTTP 400. El enlace público funciona sin cuenta de Vercel.
 
+En el navegador se probaron ID, búsqueda, listado, lista vacía y mensaje no reconocido contra los servicios reales. Se revisaron capturas de escritorio y el diseño a 390 píxeles de ancho, sin desbordamiento horizontal. No se esperó un ciclo completo de suspensión de Render; la recuperación de arranque se comprobó mediante pruebas automatizadas de respuestas temporales.
 
-## Backend público en Render Free
+## Límites vigentes
 
-Desplegado el 6 de noviembre de 2026 desde `e04f117`.
-
-- URL: https://jahi-chat-backend.onrender.com
-- Salud: `/health` devolvió `{"status":"ok"}`.
-- Consultas reales verificadas: `usuario 2`, `buscar ana`, `lista 3`, `usuario 999` y `hola`.
-- Seis comprobaciones HTTP correctas; la construcción Docker y el arranque público fueron exitosos en Render.
-- Agent permanece en loopback; solamente Orchestrator recibe tráfico público.
-- Frontend público pendiente de importación y despliegue en Vercel.
+El backend puede tardar en despertar después de inactividad. No hay autenticación de usuarios finales ni persistencia: es una demo con datos estáticos. Los límites de los planes gratuitos se detallan en [DEPLOYMENT.md](DEPLOYMENT.md).

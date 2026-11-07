@@ -1,5 +1,9 @@
 # Fullstack Challenge — Jahi
 
+**Demo pública:** https://jahi-chat.vercel.app
+
+La primera consulta puede tardar hasta unos 3 minutos mientras despierta el backend gratuito.
+
 Chat de usuarios con **Next.js App Router, React, TypeScript y Tailwind CSS**. Conserva los servicios **Orchestrator y Agent en Python/FastAPI** y su contrato REST/JSON-RPC.
 
 ```text
@@ -8,7 +12,7 @@ Navegador → Next.js /api/chat → Orchestrator /chat → Agent /rpc → seed.j
 
 ## Ejecutar localmente
 
-Requisitos: Node.js 20.9 o superior, pnpm 11 y Python 3.13. Ejecutar desde la raíz del repositorio:
+Requisitos: Node.js 24.x, pnpm 11 y Python 3.13. Ejecutar desde la raíz del repositorio:
 
 ```sh
 python -m venv .venv
@@ -60,7 +64,7 @@ Las pruebas de navegador verifican escritorio y móvil: consultas, errores, list
 
 ## Alojamiento gratuito
 
-La configuración `render.yaml` prepara una instancia Render Free con ambos servicios FastAPI. El frontend se prepara para Vercel Hobby. La primera consulta espera y reintenta mientras el backend despierta. Ver la [guía de despliegue](docs/DEPLOYMENT.md). No se creó infraestructura pública.
+La configuración `render.yaml` prepara una instancia Render Free con ambos servicios FastAPI. El frontend se prepara para Vercel Hobby. La primera consulta espera y reintenta mientras el backend despierta. Ver la [guía de despliegue](docs/DEPLOYMENT.md). Demo activa en Vercel Hobby y Render Free. La rama de producción en Vercel es `deploy-next`; la PR de migración permanece disponible para revisión.
 
 ## Documentación
 
